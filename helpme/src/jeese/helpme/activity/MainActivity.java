@@ -173,7 +173,7 @@ public class MainActivity extends ActionBarActivity {
 		initTab();
 		tabHost.setCurrentTab(CUSTOM_TAB);
 
-		setBadgeView();
+		//setBadgeView();
 	}
 
 	private void initViews() {
