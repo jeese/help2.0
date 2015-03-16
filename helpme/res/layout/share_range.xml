@@ -1,48 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jeese.helpme.view.SildingFinishLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sildingFinishLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#ffffff"
     android:orientation="vertical" >
     
-        <RelativeLayout  
-        android:id="@+id/send_bar"  
-        android:layout_width="match_parent"  
-        android:layout_height="wrap_content"  
-        android:background="#FFC600" 
-        android:gravity="center"
-        android:layout_gravity="center_vertical"
-        android:orientation="horizontal" >
-        
-        <Button
-            android:id="@+id/cancel_send_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:background="#00000000"
-            android:textColor="#585858"
-            android:text="取消" />
-
-        	<TextView
-        	    android:id="@+id/life_send_middle1"
-        	     android:layout_width="wrap_content"
-            	android:layout_height="wrap_content"
-            	android:layout_toRightOf="@+id/cancel_send_btn"
-        		android:layout_toLeftOf="@+id/send_btn"
-            	android:text="选择求助范围"
-            	android:gravity="center"
-            	android:layout_centerInParent="true"
-            	android:textColor="#585858"
-            	android:textSize="20sp" />
-
-    <Button
-        android:id="@+id/send_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:background="#00000000"
-        android:textColor="#808A87"
-        android:text="" />
-        </RelativeLayout>
+        <include layout="@layout/toolbar" />
 
     <ListView
         android:id="@+id/choose_friend_list"
@@ -52,3 +20,4 @@
     </ListView>
 
 </LinearLayout>
+</jeese.helpme.view.SildingFinishLayout>

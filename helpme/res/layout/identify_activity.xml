@@ -51,6 +51,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@color/colorButton"
                 android:text="下一步"
+                android:enabled="false"
                 android:textColor="@color/white" />
         </RelativeLayout>
     </LinearLayout>

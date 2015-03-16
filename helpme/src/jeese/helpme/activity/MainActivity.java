@@ -2,18 +2,23 @@ package jeese.helpme.activity;
 
 import io.rong.imkit.RongIM;
 import jeese.helpme.R;
+import jeese.helpme.application.App;
+import jeese.helpme.auth.LoginActivity;
 import jeese.helpme.discover.Discover_Fragment;
 import jeese.helpme.help.Help_Fragment;
 import jeese.helpme.home.Home_Fragment;
 import jeese.helpme.me.Me_Fragment;
+import jeese.helpme.setting.SettingsActivity;
 import jeese.helpme.people.People_Fragment;
 import jeese.helpme.service.LocationService;
 import jeese.helpme.service.MainService;
 import jeese.helpme.util.DummyTabContent;
 import jeese.helpme.view.BadgeView;
+import jeese.helpme.view.MaterialDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
@@ -63,6 +68,14 @@ public class MainActivity extends ActionBarActivity {
 	private View v2;
 	private View v3;
 	private View v4;
+	
+	private int ONLINE = 1;
+	private int OFFLINE = 2;
+	private int NETWORK_ERROR = 3;
+	private int STATE = 0;
+	private MaterialDialog mMaterialDialog_1;
+	private MaterialDialog mMaterialDialog_2;
+	private Handler handler = new Handler();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -173,7 +186,18 @@ public class MainActivity extends ActionBarActivity {
 		initTab();
 		tabHost.setCurrentTab(CUSTOM_TAB);
 
-		//setBadgeView();
+		//数字脚标
+		setBadgeView();
+		
+		//网络状态
+		handler.postDelayed(new Runnable() {
+
+			@Override
+			public void run() {
+				NetworkState();
+			}
+		}, 3000);
+		
 	}
 
 	private void initViews() {
@@ -195,6 +219,12 @@ public class MainActivity extends ActionBarActivity {
 					RongIM.getInstance().startConversationList(
 							MainActivity.this);
 					return true;
+					//启动设置页
+				case R.id.action_settings:
+					Intent it = new Intent(MainActivity.this, SettingsActivity.class);
+					startActivity(it);					
+					return true;
+					
 				default:
 					break;
 				}
@@ -384,6 +414,44 @@ public class MainActivity extends ActionBarActivity {
 		tabHost.addTab(tSpecMe);
 
 	}
+	
+	private void NetworkState(){
+		App myApp = ((App) getApplicationContext());
+		STATE = myApp.STATE;
+		
+		mMaterialDialog_1 = new MaterialDialog(this)
+	    .setTitle("登录失败")
+	    .setMessage("您的登录尝试失败，请检查您的账户及密码信息后重新登录。")
+	    .setPositiveButton("确认", new View.OnClickListener() {
+	        @Override
+	        public void onClick(View v) {
+	        	mMaterialDialog_1.dismiss();
+	            
+				// 页面跳转到登录页面
+				Intent intent = new Intent(MainActivity.this,
+						LoginActivity.class);
+				MainActivity.this.startActivity(intent);
+	        	finish();
+	        }
+	    });
+		
+		mMaterialDialog_2 = new MaterialDialog(this)
+	    .setTitle("网络不畅")
+	    .setMessage("您的设备网络连接不畅，请检查您的网络。")
+	    .setPositiveButton("确认", new View.OnClickListener() {
+	        @Override
+	        public void onClick(View v) {
+	        	mMaterialDialog_2.dismiss();
+
+	        }
+	    });
+		
+		if(STATE == OFFLINE){
+			mMaterialDialog_1.show();
+		}else if(STATE == NETWORK_ERROR){
+			mMaterialDialog_2.show();
+		}
+	}
 
 	private void setBadgeView() {
 		BadgeView bv = new BadgeView(this, v1);
@@ -393,19 +461,19 @@ public class MainActivity extends ActionBarActivity {
 		bv.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
 		bv.show();
 
-		BadgeView bv1 = new BadgeView(this, v3);
-		bv1.setText("1");
-		bv1.setTextColor(Color.WHITE);
-		bv1.setTextSize(12);
-		bv1.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-		bv1.show();
-
-		BadgeView bv2 = new BadgeView(this, v4);
-		bv2.setText("1");
-		bv2.setTextColor(Color.WHITE);
-		bv2.setTextSize(12);
-		bv2.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
-		bv2.show();
+//		BadgeView bv1 = new BadgeView(this, v3);
+//		bv1.setText("1");
+//		bv1.setTextColor(Color.WHITE);
+//		bv1.setTextSize(12);
+//		bv1.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+//		bv1.show();
+//
+//		BadgeView bv2 = new BadgeView(this, v4);
+//		bv2.setText("1");
+//		bv2.setTextColor(Color.WHITE);
+//		bv2.setTextSize(12);
+//		bv2.setBadgePosition(BadgeView.POSITION_TOP_RIGHT);
+//		bv2.show();
 
 	}
 }

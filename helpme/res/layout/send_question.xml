@@ -1,198 +1,358 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<jeese.helpme.view.SildingFinishLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sildingFinishLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical" >
+    android:layout_height="match_parent" >
 
-    <!-- 顶部标题 -->
-
-     <RelativeLayout  
-        android:id="@+id/send_bar"  
-        android:layout_width="match_parent"  
-        android:layout_height="wrap_content"  
-        android:background="#FFC600"
-        android:gravity="center"
-        android:layout_gravity="fill_vertical"
-        android:orientation="horizontal" >
-        
-        <Button
-            android:id="@+id/cancel_send_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:background="#00000000"
-            android:gravity="center"
-            android:layout_centerVertical="true"
-            android:textColor="#585858"
-            android:textSize="20sp" 
-            android:text="取消" />
-        
-        <LinearLayout  
-            android:id="@+id/life_send_middle"  
-            android:layout_width="wrap_content"  
-        	android:layout_height="wrap_content"  
-        	android:gravity="center"
-        	android:layout_toRightOf="@+id/cancel_send_btn"
-        	android:layout_toLeftOf="@+id/send_btn"
-        	
-        	android:orientation="vertical" >
-        	
-        	<TextView
-        	    android:id="@+id/question_send_middle1"
-        	    android:layout_width="wrap_content"
-            	android:layout_height="wrap_content"
-            	android:text="提问"
-            	android:textColor="#585858"
-            	android:textSize="20sp" />
-        	<TextView
-            	android:id="@+id/question_send_username"
-            	android:layout_width="wrap_content"
-            	android:layout_height="wrap_content"
-            	android:textColor="#585858"
-            	android:text="ShiLiuJieEr"/>
-        </LinearLayout>
-
-    <Button
-        android:id="@+id/send_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:background="#00000000"
-        android:textColor="#808A87"
-        android:textSize="20sp" 
-        android:layout_centerVertical="true"               
-        android:text="发送" />
-        </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/center_relat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/send_bar" >
-    
-        <LinearLayout
-        android:id="@+id/linear"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#ffffff"
-                android:orientation="vertical" >
-    
     <LinearLayout
-        android:id="@+id/linearEditText"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#F0F0F0"
+        android:orientation="vertical" >
+
+        <include layout="@layout/toolbar" />
+
+        <RelativeLayout
+            android:id="@+id/center_relat"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ffffff"
-                android:orientation="vertical" >
-                
-                <ScrollView
-                    android:id="@+id/SCROLLER_ID"
-    				android:layout_width="fill_parent"
-    				android:layout_height="wrap_content"
-    				android:scrollbars="vertical">
-        	
-                <EditText
-                    android:id="@+id/edit_question_text"
-                   	android:layout_width="match_parent"
-        			android:layout_height="wrap_content"
-        			android:maxLines="4"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@null"
-                    android:gravity="left|top"
-                    android:hint="请输入提问信息..."
-                    android:textColor="#6F6F6F"
-                    android:textColorHint="#b9b9b9" >
-                </EditText>
-                            </ScrollView>
-            
-            </LinearLayout>
-				
-				<LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="5dp"
-                android:background="#ffffff" >
+                android:fillViewport="true"
+                android:scrollbars="none" >
 
-					<GridView
-					    android:id="@+id/noScrollgridview"
-					    android:layout_width="wrap_content"
-					    android:layout_height="match_parent"
-					    android:columnWidth="90dp"
-					    android:focusableInTouchMode="true"  
-					    android:verticalSpacing="5dp"
-					    android:focusable="true"
-                        android:gravity="center"
-                       	android:stretchMode="columnWidth" 
-					    android:numColumns="auto_fit" >
-					</GridView>
-            </LinearLayout>
-            </LinearLayout>
-            
-				
-        <LinearLayout
-            android:id="@+id/linearLayout1"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:layout_alignParentBottom="true"
-            android:background="#FFC600" 
-            android:gravity="left"
-            android:orientation="horizontal"
->
+                <LinearLayout
+                    android:id="@+id/linearEditMsg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#ffffff"
+                    android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/send_cose_camera"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:onClick="doclick"
-                android:scaleType="center"
-                android:src="@drawable/compose_camerabutton_background" />
+                    <LinearLayout
+                        android:id="@+id/linearEditTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff"
+                        android:orientation="vertical" >
 
-            <ImageView
-                android:id="@+id/send_cose_mention"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:onClick="doclick"
-                android:scaleType="center"
-                android:src="@drawable/compose_mentionbutton_background" />
-            <ImageView
-                android:id="@+id/send_cose_emotion"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:onClick="doclick"
-                android:scaleType="center"
-                android:src="@drawable/compose_emoticonbutton_background" />
-            
-        </LinearLayout>
+                        <EditText
+                            android:id="@+id/edit_question_title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="8dp"
+                            android:hint="提问标题"
+                            android:textColor="#000000"
+                            android:textColorHint="#b9b9b9" >
+                        </EditText>
+                    </LinearLayout>
 
-        <TextView
-            android:id="@+id/send_tvlocation"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_above="@+id/linearLayout1"
-            android:layout_alignParentLeft="true"
-            android:background="@drawable/compose_locatebutton_background_succeeded1"
-            android:gravity="center"
-            android:text="显示位置"
-            android:textColor="#585858"
-            android:textSize="10dp" />
-        <TextView
-            android:id="@+id/choose_friend"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_above="@+id/linearLayout1"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/compose_locatebutton_background_succeeded"
-            android:gravity="center_vertical"
-            android:text="公开"
-            android:textColor="#585858"
-            android:textSize="10dp" />
-    </RelativeLayout>
+                    <LinearLayout
+                        android:id="@+id/linearEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff"
+                        android:orientation="vertical" >
 
-</RelativeLayout>
+                        <EditText
+                            android:id="@+id/edit_question_text"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:background="@null"
+                            android:hint="请输入提问信息..."
+                            android:textColor="#000000"
+                            android:textColorHint="#b9b9b9" >
+                        </EditText>
+                        <TextView
+                            android:id="@+id/textView_shownumber"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginRight="8dp"
+                            android:text="TextView" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearEditPhoto"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#ffffff"
+                        android:orientation="vertical" >
+
+                        
+
+                        <jeese.helpme.view.MyGridView
+                            android:id="@+id/noScrollgridview"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:columnWidth="80dp"
+                            android:focusable="true"
+                            android:focusableInTouchMode="true"
+                            android:gravity="center"
+                            android:numColumns="auto_fit"
+                            android:stretchMode="columnWidth"
+                            android:verticalSpacing="3dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_below="@+id/linearEditAddress"
+                            android:layout_marginTop="8dp"
+                            android:background="#BEBEBE" >
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/linearEditAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/linearEditPhoto"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp" >
+
+                        <ImageView
+                            android:id="@+id/img1"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="8dp"
+                            android:src="@drawable/abc_btn_radio_material" />
+
+                        <TextView
+                            android:id="@+id/choose_address"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_toRightOf="@+id/img1"
+                            android:text="所在位置" />
+
+                        <TextView
+                            android:id="@+id/show_address"
+                            android:layout_width="200dp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="8dp"
+                            android:text="" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/linearEditAddress"
+                        android:background="#BEBEBE" >
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/linearEditRange"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/linearEditAddress"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp" >
+
+                        <ImageView
+                            android:id="@+id/img2"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="8dp"
+                            android:src="@drawable/abc_btn_radio_material" />
+
+                        <TextView
+                            android:id="@+id/choose_range"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_toRightOf="@+id/img2"
+                            android:text="提问范围" />
+
+                        <TextView
+                            android:id="@+id/show_range"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="8dp"
+                            android:text="" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/linearEditRange"
+                        android:background="#BEBEBE" >
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/linearEditTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/linearEditRange"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp" >
+
+                        <ImageView
+                            android:id="@+id/img3"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="8dp"
+                            android:src="@drawable/abc_btn_radio_material" />
+
+                        <TextView
+                            android:id="@+id/choose_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_toRightOf="@+id/img3"
+                            android:text="提问有效期" />
+
+                        <TextView
+                            android:id="@+id/show_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="8dp"
+                            android:text="" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/linearEditTime"
+                        android:background="#BEBEBE" >
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/linearEditMoney"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/linearEditTime"
+                        android:layout_marginBottom="5dp"
+                        android:layout_marginTop="5dp" >
+
+                        <ImageView
+                            android:id="@+id/img4"
+                            android:layout_width="10dp"
+                            android:layout_height="10dp"
+                            android:layout_marginLeft="8dp"
+                            android:src="@drawable/abc_btn_radio_material" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="8dp"
+                            android:layout_toRightOf="@+id/img4"
+                            android:text="爱心币" />
+
+                        <TextView
+                            android:id="@+id/show_money"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="8dp"
+                            android:text="20" />
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/linearEditMoney"
+                        android:background="#BEBEBE" >
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/linearEditPeople2"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_below="@+id/linearEditTag" >
+
+                        <LinearLayout
+                            android:id="@+id/linearEditPeople"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#F0F0F0"
+                            android:orientation="vertical" >
+
+                            <TextView
+                                android:id="@+id/textpeople"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_alignParentTop="true"
+                                android:layout_marginBottom="3dp"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginTop="3dp"
+                                android:text="点人回答" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#BEBEBE" >
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/linearEditCircleView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/linearEditPeople"
+                            android:background="#ffffff"
+                            android:orientation="vertical" >
+
+                            <HorizontalScrollView
+                                android:id="@+id/selectimg_horizontalScrollView"
+                                android:layout_width="fill_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="8dp"
+                                android:layout_marginRight="8dp">
+
+                                <LinearLayout
+                                    android:layout_width="fill_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal" >
+
+                                    <GridView
+                                        android:id="@+id/headnamegridview"
+                                        android:layout_width="fill_parent"
+                                        android:layout_height="fill_parent"
+                                        android:fastScrollEnabled="true"
+                                        android:focusable="true"
+                                        android:gravity="center"
+                                        android:scrollbars="none" >
+                                    </GridView>
+                                </LinearLayout>
+                            </HorizontalScrollView>
+                        </LinearLayout>
+                    </RelativeLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_below="@+id/linearEditPeople"
+                        android:background="#BEBEBE" >
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/linearSendQuestion"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:orientation="horizontal" >
+
+                        <Button
+                            android:id="@+id/button_send_question"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#9aff9a"
+                            android:text="发布提问" />
+                    </LinearLayout>
+                </LinearLayout>
+            </ScrollView>
+        </RelativeLayout>
+    </LinearLayout>
+
+</jeese.helpme.view.SildingFinishLayout>

@@ -1,0 +1,22 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" 
+    android:background="@drawable/bt_nobgd_top_button_left_right_11"
+    android:orientation="horizontal">
+
+    <ImageView
+        android:id="@+id/choose_image"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_margin="10dp"
+        android:src="@drawable/circle_normal" />
+
+    <TextView
+        android:id="@+id/choose_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:layout_gravity="center_vertical"
+        android:text="TextView" />
+
+</LinearLayout>

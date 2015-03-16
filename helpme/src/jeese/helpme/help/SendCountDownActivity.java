@@ -8,6 +8,7 @@ import jeese.helpme.view.RippleBackground;
 import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
@@ -37,12 +38,12 @@ public class SendCountDownActivity extends ActionBarActivity {
 	}
 
 	private void init() {
-		
+
 		centerNum = (Button) findViewById(R.id.centerNum);
-		
+
 		Button cencel = (Button) findViewById(R.id.cencel_button);
 		cencel.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				finish();
@@ -55,10 +56,13 @@ public class SendCountDownActivity extends ActionBarActivity {
 		time = 8;
 
 		countDown = new Handler();
-		myRunnable= new Runnable(){
+		myRunnable = new Runnable() {
 			@Override
 			public void run() {
 				if (time == 0) {
+					Intent intent = new Intent(SendCountDownActivity.this,
+							SendHealthHelp.class);
+					startActivity(intent);
 					finish();
 				} else {
 					time--;

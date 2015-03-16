@@ -46,20 +46,10 @@ public class Me_Fragment extends Fragment {
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				Intent it = new Intent(getActivity(), MyProfile.class);
+				Intent it = new Intent(getActivity(), MeProfile.class);
 				startActivity(it);
 			}
 		});
-		
-		meSet = (TextView) mView.findViewById(R.id.textView6_me_set);
-		meSet.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				Intent it = new Intent(getActivity(), MeSetting.class);
-				startActivity(it);
-			}
-		});	
+
 	}
 }

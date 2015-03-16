@@ -1,0 +1,21 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#fcfcfc"
+    android:orientation="vertical" >
+    
+        <include layout="@layout/toolbar" />
+        
+    <ListView
+        android:id="@+id/listView_show_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </ListView>
+
+    <Button
+        android:id="@+id/button_add_new_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="新增地址" />
+
+</LinearLayout>

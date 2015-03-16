@@ -1,56 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<jeese.helpme.view.SildingFinishLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sildingFinishLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:background="#ffffff"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F0F0"
     android:orientation="vertical" >
     
-        <RelativeLayout  
-        android:id="@+id/send_bar"  
-        android:layout_width="match_parent"  
-        android:layout_height="35dp"  
-        android:background="#FFC600"
-        android:gravity="center"
-        android:layout_gravity="fill_vertical"
-        android:orientation="horizontal" >
-        
-        <Button
-            android:id="@+id/cancel_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:background="#00000000"
-            android:gravity="center"
-            android:layout_centerVertical="true"
-            android:textColor="#585858"
-            android:textSize="15sp" 
-            android:text="返回" />
-        <TextView
-            android:id="@+id/life_send_middle1"
-        	android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="个人信息"
-            android:textColor="#585858"
-           	android:gravity="center"
-            android:layout_toRightOf="@+id/cancel_btn"
-        	android:layout_toLeftOf="@+id/send_btn"
-        	android:layout_centerVertical="true"   
-            android:textSize="20sp" />
-        <Button
-        	android:id="@+id/send_btn"
-        	android:layout_width="wrap_content"
-        	android:layout_height="wrap_content"
-        	android:layout_alignParentRight="true"
-        	android:background="#00000000"
-        	android:textColor="#808A87"
-        	android:textSize="20sp" 
-        	android:layout_centerVertical="true"/>            
-        	</RelativeLayout>
+    <include layout="@layout/toolbar" />
 
-        <ImageView
+        <jeese.helpme.view.CircleImageView
             android:id="@+id/image_portrait"
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:layout_margin="15dp"
+            android:contentDescription="headview"
             android:layout_gravity="center_horizontal"
             android:src="@drawable/user_head" />
 
@@ -61,3 +28,4 @@
         </ListView>
         
 </LinearLayout>
+</jeese.helpme.view.SildingFinishLayout>

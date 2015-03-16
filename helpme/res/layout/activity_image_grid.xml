@@ -8,13 +8,13 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFC600">
+        android:background="#0f9d58">
         
                     <Button
                         android:id="@+id/bt_finish"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentRight="true"
                         android:layout_marginLeft="8dp"
                         android:gravity="center"
                         android:text="完成"
@@ -28,19 +28,19 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="相册"
-            android:textColor="#585858"
+            android:textColor="#ffffff"
             android:textSize="20sp" />
 
         <Button
             android:id="@+id/bt_cancel"
             android:layout_width="wrap_content"
             android:layout_height="40dp"
-            android:layout_alignParentRight="true"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
             android:gravity="center"
             android:text="取消"
-            android:textColor="#585858"
+            android:textColor="#ffffff"
             android:background="#00000000"
             android:textSize="20sp" />
     </RelativeLayout>

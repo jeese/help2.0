@@ -143,7 +143,7 @@ public class MaterialDialog {
 				LinearLayout.LayoutParams.WRAP_CONTENT);
 		mPositiveButton.setLayoutParams(params);
 		mPositiveButton.setBackgroundResource(R.drawable.button);
-		mPositiveButton.setTextColor(Color.argb(255, 20, 200, 120));
+		mPositiveButton.setTextColor(Color.argb(255, 10, 160, 90));
 		mPositiveButton.setText(resId);
 		mPositiveButton.setGravity(Gravity.CENTER);
 		mPositiveButton.setTextSize(16);
@@ -168,7 +168,7 @@ public class MaterialDialog {
 				LinearLayout.LayoutParams.WRAP_CONTENT);
 		mPositiveButton.setLayoutParams(params);
 		mPositiveButton.setBackgroundResource(R.drawable.button);
-		mPositiveButton.setTextColor(Color.argb(255, 20, 200, 120));
+		mPositiveButton.setTextColor(Color.argb(255, 10, 160, 90));
 		mPositiveButton.setText(text);
 		mPositiveButton.setGravity(Gravity.CENTER);
 		mPositiveButton.setTextSize(16);
@@ -367,7 +367,7 @@ public class MaterialDialog {
 					LinearLayout.LayoutParams.WRAP_CONTENT);
 			button.setLayoutParams(params);
 			button.setBackgroundResource(R.drawable.material_card);
-			button.setTextColor(Color.argb(255, 20, 200, 120));
+			button.setTextColor(Color.argb(255, 10, 160, 90));
 			button.setText(text);
 			button.setGravity(Gravity.CENTER);
 			button.setTextSize(16);

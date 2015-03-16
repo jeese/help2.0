@@ -13,6 +13,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import jeese.helpme.R;
 import jeese.helpme.activity.MainActivity;
 import jeese.helpme.application.App;
+import jeese.helpme.view.MaterialDialog;
 import jeese.helpme.view.SildingFinishLayout;
 import jeese.helpme.view.SildingFinishLayout.OnSildingFinishListener;
 import jeese.helpme.view.materialedittext.MaterialEditText;
@@ -29,7 +30,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
-public class loginActivity extends ActionBarActivity {
+public class LoginActivity extends ActionBarActivity {
 
 	public static Activity loginPhoneActivity;
 	private Toolbar mToolbar;
@@ -38,6 +39,8 @@ public class loginActivity extends ActionBarActivity {
 	private MaterialEditText phone_edit;
 	private String phone;
 	private String password;
+	private MaterialDialog mMaterialDialog_1;
+	private MaterialDialog mMaterialDialog_2;
 
 
 	@Override
@@ -123,6 +126,16 @@ public class loginActivity extends ActionBarActivity {
 					@Override
 					public void onFailure(HttpException arg0, String arg1) {
 						System.out.println("连接服务器失败");
+						mMaterialDialog_2 = new MaterialDialog(LoginActivity.this)
+					    .setTitle("网络不畅")
+					    .setMessage("您的设备网络连接不畅，请检查您的网络。")
+					    .setPositiveButton("确认", new View.OnClickListener() {
+					        @Override
+					        public void onClick(View v) {
+					        	mMaterialDialog_2.dismiss();
+					        }
+					    });
+						mMaterialDialog_2.show();
 					}
 
 					@Override
@@ -139,21 +152,32 @@ public class loginActivity extends ActionBarActivity {
 								editor.putString("password", password);
 								editor.commit();
 								
-								System.out.println("登陆成功");
+								System.out.println("登录成功");
 								
 								//执行登陆
 								App myApp = ((App) getApplicationContext());
 								myApp.login();
 								
 								// 页面跳转到主页面
-								Intent intent = new Intent(loginActivity.this,
+								Intent intent = new Intent(LoginActivity.this,
 										MainActivity.class);
-								loginActivity.this.startActivity(intent);
+								LoginActivity.this.startActivity(intent);
 								StartActivity.StartActivity.finish();
 								finish();
 								
 							}else{
-								System.out.println("登陆失败");
+								System.out.println("登录失败");
+								mMaterialDialog_1 = new MaterialDialog(LoginActivity.this)
+							    .setTitle("登录失败")
+							    .setMessage("您的登录尝试失败，请检查您的账户及密码信息后重新登录。")
+							    .setPositiveButton("确认", new View.OnClickListener() {
+							        @Override
+							        public void onClick(View v) {
+							        	mMaterialDialog_1.dismiss();
+
+							        }
+							    });
+								mMaterialDialog_1.show();
 							}
 
 						} catch (JSONException e) {

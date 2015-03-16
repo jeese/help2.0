@@ -1,18 +1,30 @@
 package jeese.helpme.help;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lidroid.xutils.HttpUtils;
+import com.lidroid.xutils.exception.HttpException;
+import com.lidroid.xutils.http.RequestParams;
+import com.lidroid.xutils.http.ResponseInfo;
+import com.lidroid.xutils.http.callback.RequestCallBack;
+import com.lidroid.xutils.http.client.HttpRequest.HttpMethod;
+
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import jeese.helpme.R;
 import jeese.helpme.photoUtil.Bimp;
 import jeese.helpme.photoUtil.ChoosePicActivity;
 import jeese.helpme.photoUtil.FileUtils;
 import jeese.helpme.photoUtil.PhotoActivity;
 import jeese.helpme.service.LocationService;
-import android.app.Activity;
+import jeese.helpme.view.MyGridView;
+import jeese.helpme.view.SildingFinishLayout;
+import jeese.helpme.view.SildingFinishLayout.OnSildingFinishListener;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -26,10 +38,11 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -48,21 +61,38 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 /*==================一次性上传多张图片=====================*/
-public class SendQuestionActivity extends Activity {
+public class SendQuestionActivity extends ActionBarActivity {
 
-	private TextView chooseFriend;
-	private Button sendLifeHelpBtn;
+	private Toolbar mToolbar;
+	private SildingFinishLayout mSildingFinishLayout;
+	private EditText editHelpTitle;
 	private EditText editHelpContent;
-	private Button sendCancelBtn;
-	private ImageView camera;
+	private TextView tv_num;// 用来显示剩余字数
+	private int numTitle = 30;
+	private int numContent = 300;// 限制的最大字数 <br>
+	private Button sendLifeHelpBtn;
+
+	private TextView chooseLocation;
 	private TextView showLocation;
-	private GridView noScrollgridview;;
+
+	private TextView chooseRange;
+	private TextView showRange;
+
+	private TextView chooseTime;
+	private TextView showTime;
+	// private ImageView camera;
+
+	private MyGridView noScrollgridview;;
 	private GridAdapter adapter;
+
+	private GridView headgridview;
+	private List<ImageAndText> headNameList;
 
 	private static final String SERVER_URL = "http://120.24.208.130:8080/api/";
 
 	// requestCode
 	private static final int TAKE_PICTURE = 0;// 拍照的请求码
+	private static final int CHOOSE_TIME = 3;// 选择求助范围的请求码
 	private static final int CHOOSE_FRIEND = 4;// 选择求助范围的请求码
 	private static final int CHOOSE_LOCATION = 5;// 选择位置的请求码
 
@@ -78,15 +108,28 @@ public class SendQuestionActivity extends Activity {
 	}
 
 	public void init() {
-		chooseFriend = (TextView) findViewById(R.id.choose_friend);
-		showLocation = (TextView) findViewById(R.id.send_tvlocation);
+		//设置toolbar
+		setToolBar();
+		editHelpTitle = (EditText) findViewById(R.id.edit_question_title);
 		editHelpContent = (EditText) findViewById(R.id.edit_question_text);
-		sendLifeHelpBtn = (Button) findViewById(R.id.send_btn);
-		sendCancelBtn = (Button) findViewById(R.id.cancel_send_btn);
-		camera = (ImageView) findViewById(R.id.send_cose_camera);
-
+		tv_num = (TextView) findViewById(R.id.textView_shownumber);
+		tv_num.setText("300");
+		sendLifeHelpBtn = (Button) findViewById(R.id.button_send_question);
+		chooseLocation = (TextView) findViewById(R.id.choose_address);
+		showLocation = (TextView) findViewById(R.id.show_address);
+		chooseRange = (TextView) findViewById(R.id.choose_range);
+		showRange = (TextView) findViewById(R.id.show_range);
+		showRange.setText("公开");
+		chooseTime = (TextView) findViewById(R.id.choose_time);
+		showTime = (TextView) findViewById(R.id.show_time);
+		showTime.setText("1天");
+		
+		headNameList = new ArrayList<ImageAndText>();
+		headgridview = (GridView) findViewById(R.id.headnamegridview);
+		headNameGridInit();
+		
 		// 初始化gridview
-		noScrollgridview = (GridView) findViewById(R.id.noScrollgridview);
+		noScrollgridview = (MyGridView) findViewById(R.id.noScrollgridview);
 		noScrollgridview.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		adapter = new GridAdapter(this);
 		adapter.update();
@@ -106,14 +149,26 @@ public class SendQuestionActivity extends Activity {
 				}
 			}
 		});
+		mSildingFinishLayout = (SildingFinishLayout) findViewById(R.id.sildingFinishLayout);
+		mSildingFinishLayout
+				.setOnSildingFinishListener(new OnSildingFinishListener() {
 
+					@Override
+					public void onSildingFinish() {
+						finish();
+					}
+				});
+
+		// touchView要设置到ListView上面
+		mSildingFinishLayout.setTouchView(mSildingFinishLayout);
+		
 		/**
-		 * 点击左下角设置显示地理位置
+		 * 选择当前所在位置
 		 */
-		showLocation.setOnClickListener(new OnClickListener() {
-
+		chooseLocation.setOnClickListener(new OnClickListener() {
+			
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(SendQuestionActivity.this,
 						ChooseLocation.class);
@@ -122,9 +177,9 @@ public class SendQuestionActivity extends Activity {
 		});
 
 		/**
-		 * 点击右下角设置对谁公开求助内容
+		 * 选择对谁公开求助内容
 		 */
-		chooseFriend.setOnClickListener(new OnClickListener() {
+		chooseRange.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
@@ -134,130 +189,293 @@ public class SendQuestionActivity extends Activity {
 				startActivityForResult(intent, CHOOSE_FRIEND);
 			}
 		});
+		
+		/**
+		 * 选择提问有效期
+		 */
+		chooseTime.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(SendQuestionActivity.this,
+						ChooseHelpTime.class);
+				startActivityForResult(intent, CHOOSE_TIME);
+			}
+		});
+		editHelpTitle.addTextChangedListener(new TextWatcher() {
+			
+            private CharSequence temp;
+            private int selectionStart;
+            private int selectionEnd;
+            
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+				  temp = s;
+				  System.out.println("s="+s);
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				int number = numTitle - s.length();
+//				tv_num.setText("" + number);
+//				if(number < 10){
+//					tv_num.setTextColor(R.color.chenghuang);
+//				}
+				selectionStart = editHelpTitle.getSelectionStart();
+				selectionEnd = editHelpTitle.getSelectionEnd();
+				
+				if (temp.length() > numTitle){
+					s.delete(selectionStart - 1, selectionEnd);
+					int tempSelection = selectionStart;
+					editHelpTitle.setText(s);
+                    editHelpTitle.setSelection(tempSelection);//设置光标在最后
+				}
+			}
+		});
+		editHelpContent.addTextChangedListener(new TextWatcher() { 
+            private CharSequence temp;
+            private int selectionStart;
+            private int selectionEnd;
+            
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				// TODO Auto-generated method stub
+				  temp = s;
+				  System.out.println("s="+s);
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				int number = numContent - s.length();
+				tv_num.setText("" + number);
+				if(number < 10){
+					tv_num.setTextColor(R.color.chenghuang);
+				}
+				selectionStart = editHelpContent.getSelectionStart();
+				selectionEnd = editHelpContent.getSelectionEnd();
+				
+				if (temp.length() > numContent){
+					s.delete(selectionStart - 1, selectionEnd);
+					int tempSelection = selectionStart;
+					editHelpContent.setText(s);
+                    editHelpContent.setSelection(tempSelection);//设置光标在最后
+				}
+			}
+		});
 
 		/**
 		 * 点击camera图标，弹出选择框进行拍照上传或者从相册选择照片上传或者取消
 		 */
-		camera.setOnClickListener(new OnClickListener() {
+/*		camera.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
+				((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
+						.hideSoftInputFromWindow(SendQuestionActivity.this
+								.getCurrentFocus().getWindowToken(),
+								InputMethodManager.HIDE_NOT_ALWAYS);
 				new PopupWindows(SendQuestionActivity.this, camera);
 			}
-		});
+		});*/
 
 		/**
-		 * 根据输入文本的变化更改确认按钮的字体颜色
-		 */
-		editHelpContent.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
-				// 根据输入文本的变化更改确认按钮的字体颜色
-				String str = editHelpContent.getText().toString();
-				if (str.equals("")) {
-					sendLifeHelpBtn.setTextColor(getResources().getColor(
-							R.color.gray));
-				} else {
-					sendLifeHelpBtn.setTextColor(getResources().getColor(
-							R.color.dark_gray));
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1,
-					int arg2, int arg3) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable arg0) {
-			}
-		});
-
-		/**
-		 * 点击取消按钮关闭当前界面
-		 */
-		sendCancelBtn.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
-
-		/**
-		 * 点击发送按钮，把数据发送出去(未实现！！！)
+		 * 点击发送按钮，把数据发送出去
 		 */
 		sendLifeHelpBtn.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				String content = editHelpContent.getText().toString();
-				if (content.equals("")) {
+
+				if (editHelpContent.getText().toString().equals("")) {
 					Toast.makeText(getApplicationContext(), "发布的内容不能为空",
 							Toast.LENGTH_SHORT).show();
 					return;
 				}
+				//设置HttpParams参数，然后创建httpClient对象
+				RequestParams params = new RequestParams();
+				
 				// 获取图片路径
-//				List<String> list = new ArrayList<String>();
-//				for (int i = 0; i < Bimp.drr.size(); i++) {
-//					String Str = Bimp.drr.get(i).substring(
-//							Bimp.drr.get(i).lastIndexOf("/") + 1,
-//							Bimp.drr.get(i).lastIndexOf("."));
-//					list.add(FileUtils.SDPATH + Str + ".JPEG");
-//				}
-//				// 高清的压缩图片全部就在 list 路径里面了
-//				// 高清的压缩过的 bmp 对象 都在 Bimp.bmp里面
-//
-//				AjaxParams params = new AjaxParams();
-//				// 上传图片文件
-//				for (int i = 0; i < Bimp.drr.size(); i++) {
-//					String path = Bimp.drr.get(i);
-//					try {
-//						params.put("profile_picture", new File(path));
-//					} catch (FileNotFoundException e) {
-//						// TODO Auto-generated catch block
-//						e.printStackTrace();
-//					}
-//				}
-//
-//				// 完成上传服务器后 .........
-//				FileUtils.deleteDir();
-//
-//				Double latitude = LocationService.getGeoLat();
-//				Double longitude = LocationService.getGeoLng();
-//				String city = LocationService.getCityCode();
-//				String address = LocationService.getAddress();
-//				System.out.println("纬度是：" + latitude);
-//				System.out.println("经度是：" + longitude);
-//				System.out.println("城市是：" + city);
-//				System.out.println("地址是：" + address);
-//
-//				params.put("username", "xiaoming");
-//				params.put("datetime", "2014-12-16");
-//				params.put("type", "1");
-//				params.put("content", content);
-//				params.put("longitude", longitude.toString());
-//				params.put("latitude", latitude.toString());
-//				params.put("city", city);
-//				params.put("address", address);
-//
-//				FinalHttp finalHttp = new FinalHttp();
-//				finalHttp.post(SERVER_URL, params, new AjaxCallBack<Object>() {
-//					@Override
-//					public void onLoading(long count, long current) {
-//						super.onLoading(count, current);
-//					}
-//
-//					@Override
-//					public void onSuccess(Object t) {
-//						System.out.println("返回信息是：" + t.toString());
-//					}
-//				});
+				List<String> list = new ArrayList<String>();
+				for (int i = 0; i < Bimp.drr.size(); i++) {
+					String Str = Bimp.drr.get(i).substring(
+							Bimp.drr.get(i).lastIndexOf("/") + 1,
+							Bimp.drr.get(i).lastIndexOf("."));
+					list.add(FileUtils.SDPATH + Str + ".JPEG");
+				}
+				// 高清的压缩图片全部就在 list 路径里面了
+				// 高清的压缩过的 bmp 对象 都在 Bimp.bmp里面
+				for(int i =0; i < Bimp.drr.size(); i++){
+					//图片
+					params.addBodyParameter("picfile" + i, new File(list.get(i)));
+				}
+				//标题
+				params.addQueryStringParameter("title", editHelpTitle.getText().toString());
+				//内容
+				params.addQueryStringParameter("content", editHelpContent.getText().toString());
+				//经度
+				params.addQueryStringParameter("longitude", String.valueOf(LocationService.getGeoLng()));
+				//纬度
+				params.addQueryStringParameter("latitude", String.valueOf(LocationService.getGeoLat()));
+				//省
+				params.addQueryStringParameter("provice", LocationService.getProvince());
+				//市
+				params.addQueryStringParameter("city", LocationService.getCity());
+				//地址
+				params.addQueryStringParameter("address", showLocation.getText().toString());
+				//提问范围
+				params.addQueryStringParameter("range", showRange.getText().toString());
+				//提问有效期
+				params.addQueryStringParameter("time", showTime.getText().toString());
+				
+				HttpUtils http = new HttpUtils();
+				http.send(HttpMethod.POST, SERVER_URL, params, new RequestCallBack<String>(){
+					
+			        @Override
+			        public void onStart() {
+			            //testTextView.setText("conn...");
+			        }
+
+			        @Override
+			        public void onLoading(long total, long current, boolean isUploading) {
+			            if (isUploading) {
+			               // testTextView.setText("upload: " + current + "/" + total);
+			            } else {
+			               // testTextView.setText("reply: " + current + "/" + total);
+			            }
+			        }
+
+					@Override
+					public void onFailure(HttpException arg0, String arg1) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void onSuccess(ResponseInfo<String> arg0) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+				});
 			}
 		});
+	}
+
+	private void headNameGridInit() {
+		// TODO Auto-generated method stub
+		headNameList
+				.add(new ImageAndText(
+						"http://www.qqtheme.com/touxiang/UploadPic/2009-11/2009119101320367.gif",
+						"灰太狼"));
+		headNameList
+				.add(new ImageAndText(
+						"http://www.qqtai.com/qqhead/UploadFiles_3178/200809/2008092004121344.jpg",
+						"小米"));
+		headNameList
+				.add(new ImageAndText(
+						"http://i2.itc.cn/20111107/965_cbc1dac4_dcb2_1638_c3b1_d3d57d816c78_1.jpg",
+						"谷歌"));
+		headNameList.add(new ImageAndText(
+				"http://www.baidu.com/img/baidu_sylogo1.gif", "百度"));
+		headNameList
+				.add(new ImageAndText(
+						"http://i1.itc.cn/20111107/70b_3bbc312b_a7d6_24bf_5e85_f8f181f25d0a_1.jpg",
+						"灰太狼"));
+		headNameList
+				.add(new ImageAndText(
+						"http://i1.itc.cn/20111107/2b7c_ca94ecbd_c09e_1d97_1de1_f14109b686e1_1.jpg",
+						"小米"));
+		headNameList
+				.add(new ImageAndText(
+						"http://i3.itc.cn/20111107/3ab_8ac7b5d8_442b_d8fe_a4fd_62df63bd0a54_1.jpg",
+						"灰太狼"));
+		headNameList
+				.add(new ImageAndText(
+						"http://i3.itc.cn/20111107/29e_9251f52f_9701_341e_672c_5caa426c8501_1.jpg",
+						"小米"));
+		headNameList
+				.add(new ImageAndText(
+						"http://i2.itc.cn/20111107/focus_5a_c1ecc3bf_05db_49ff_b005_37a10bc87e86_0.jpg",
+						"灰太狼"));
+		headNameList
+				.add(new ImageAndText(
+						"http://i2.itc.cn/20111107/616_fd2be256_04f2_02d5_cf93_31c9028f65b2_1.jpg",
+						"小米"));
+		headNameList
+				.add(new ImageAndText(
+						"http://www.qqtheme.com/touxiang/UploadPic/2009-11/2009119101320367.gif",
+						"灰太狼"));
+		DisplayMetrics dm = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		float density = dm.density;
+		int allWidth = (int) (110 * headNameList.size() * density);
+		int itemWidth = (int) (100 * density);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+				allWidth, LinearLayout.LayoutParams.FILL_PARENT);
+		headgridview.setLayoutParams(params);
+		headgridview.setColumnWidth(90);
+		headgridview.setHorizontalSpacing(10);
+		headgridview.setStretchMode(GridView.NO_STRETCH);
+		headgridview.setNumColumns(headNameList.size());
+		headgridview.setAdapter(new ImageAndTextListAdapter(this, headNameList,
+				headgridview));
+	}
+
+	private void setToolBar() {
+		mToolbar = (Toolbar) findViewById(R.id.toolbar);
+		// toolbar.setLogo(R.drawable.ic_launcher);
+		mToolbar.setTitle("我要提问");// 标题的文字需在setSupportActionBar之前，不然会无效
+		// toolbar.setSubtitle("副标题");
+		setSupportActionBar(mToolbar);// Toolbar即能取代原本的 actionbar 了
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+		// 菜单的监听可以在toolbar里设置，也可以像ActionBar那样，通过下面的两个回调方法来处理
+		mToolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+			@Override
+			public boolean onMenuItemClick(MenuItem item) {
+				switch (item.getItemId()) {
+				case android.R.id.home:
+					finish();
+					return true;
+				default:
+					break;
+				}
+				return true;
+			}
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	private Uri photoUri;
@@ -320,10 +538,16 @@ public class SendQuestionActivity extends Activity {
 				// startPhotoZoom(photoUri);
 			}
 			break;
+		case CHOOSE_TIME:
+			if (resultCode == RESULT_OK) {
+				String result = data.getExtras().getString("time").toString();
+				showTime.setText(result);
+			}
+			break;
 		case CHOOSE_FRIEND:
 			if (resultCode == RESULT_OK) {
 				String result = data.getExtras().getString("group").toString();
-				chooseFriend.setText(result);
+				showRange.setText(result);
 			}
 			break;
 		case CHOOSE_LOCATION:
@@ -475,9 +699,6 @@ public class SendQuestionActivity extends Activity {
 			if (position == Bimp.bmp.size()) {
 				holder.image.setImageBitmap(BitmapFactory.decodeResource(
 						getResources(), R.drawable.icon_addpic_unfocused));// 没有添加图片的时候不显示加号图片
-				if (position == 0) {
-					holder.image.setVisibility(View.GONE);
-				}
 				if (position == 9) {
 					holder.image.setVisibility(View.GONE);// 数量达到9，不显示加号图片，不能再添加图片
 				}
@@ -545,7 +766,7 @@ public class SendQuestionActivity extends Activity {
 	 */
 	protected void onRestart() {
 		adapter.update();
-		System.out.println("SendLifeHelpActivity is onRestart!!!!!!!!!!!");
+		System.out.println("SendQuestionActivity is onRestart!!!!!!!!!!!");
 		super.onRestart();
 	}
 
@@ -566,7 +787,7 @@ public class SendQuestionActivity extends Activity {
 		Bimp.max = 0;
 		Bimp.act_bool = true;
 		Bimp.drr.clear();
-		System.out.println("SendLifeHelpActivity is onDestory!!!!!!!!!!!");
+		System.out.println("SendQuestionActivity is onDestory!!!!!!!!!!!");
 		super.onDestroy();
 	}
 }

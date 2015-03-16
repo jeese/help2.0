@@ -13,6 +13,7 @@ import com.lidroid.xutils.http.client.HttpRequest;
 import jeese.helpme.R;
 import jeese.helpme.activity.MainActivity;
 import jeese.helpme.application.App;
+import jeese.helpme.view.MaterialDialog;
 import jeese.helpme.view.SildingFinishLayout;
 import jeese.helpme.view.SildingFinishLayout.OnSildingFinishListener;
 import jeese.helpme.view.materialedittext.MaterialEditText;
@@ -39,15 +40,16 @@ public class RegisterPasswordActivity extends ActionBarActivity {
 	private String phone;
 	private String password;
 	private String nickname;
-
+	private MaterialDialog mMaterialDialog_1;
+	private MaterialDialog mMaterialDialog_2;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.register_password);
 		RegisterPasswordActivity = this;
-		Bundle extras = getIntent().getExtras(); 
-		phone = extras.getString("phone"); 
+		Bundle extras = getIntent().getExtras();
+		phone = extras.getString("phone");
 		init();
 	}
 
@@ -63,8 +65,10 @@ public class RegisterPasswordActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View v) {
-				//访问服务器注册
-				register();
+				if (password_edit.getText().toString().isEmpty() == false
+						&& nickname_edit.getText().toString().isEmpty() == false)
+					// 访问服务器注册
+					register();
 			}
 		});
 
@@ -130,6 +134,16 @@ public class RegisterPasswordActivity extends ActionBarActivity {
 					@Override
 					public void onFailure(HttpException arg0, String arg1) {
 						System.out.println("访问服务器失败");
+						mMaterialDialog_2 = new MaterialDialog(RegisterPasswordActivity.this)
+					    .setTitle("网络不畅")
+					    .setMessage("您的设备网络连接不畅，请检查您的网络。")
+					    .setPositiveButton("确认", new View.OnClickListener() {
+					        @Override
+					        public void onClick(View v) {
+					        	mMaterialDialog_2.dismiss();
+					        }
+					    });
+						mMaterialDialog_2.show();
 					}
 
 					@Override
@@ -138,31 +152,43 @@ public class RegisterPasswordActivity extends ActionBarActivity {
 						try {
 							JSONObject replyObject = new JSONObject(arg0.result);
 							String state = replyObject.getString("state");
-							if(state.equals("true")){
+							if (state.equals("true")) {
 								SharedPreferences preferences = getSharedPreferences(
 										"e_help", Context.MODE_PRIVATE);
 								Editor editor = preferences.edit();
 								editor.putString("cellPhone", phone);
 								editor.putString("password", password);
 								editor.commit();
-								
+
 								System.out.println("注册成功");
-								
-								//执行登陆
+
+								// 执行登陆
 								App myApp = ((App) getApplicationContext());
 								myApp.login();
-								
+
 								// 页面跳转到主页面
-								Intent intent = new Intent(RegisterPasswordActivity.this,
+								Intent intent = new Intent(
+										RegisterPasswordActivity.this,
 										MainActivity.class);
-								RegisterPasswordActivity.this.startActivity(intent);
+								RegisterPasswordActivity.this
+										.startActivity(intent);
 								StartActivity.StartActivity.finish();
 								finish();
-								
-							}else{
+
+							} else {
 								System.out.println("注册失败");
+								mMaterialDialog_1 = new MaterialDialog(RegisterPasswordActivity.this)
+							    .setTitle("注册失败")
+							    .setMessage("您的注册尝试失败，请检查您的注册信息后重试。")
+							    .setPositiveButton("确认", new View.OnClickListener() {
+							        @Override
+							        public void onClick(View v) {
+							        	mMaterialDialog_1.dismiss();
+
+							        }
+							    });
+								mMaterialDialog_1.show();
 							}
-		
 
 						} catch (JSONException e) {
 							// TODO Auto-generated catch block

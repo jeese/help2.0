@@ -39,7 +39,7 @@
 	<color name="text_time">#ACACAC</color><!--时间字体颜色-->
 	
 	
-	<color name="tag_1">#B3D236</color><!--标签浅绿色-->
+	<color name="tag_1">#099a5a</color><!--标签浅绿色-->
 	
 	<!-- toolbar（actionbar）颜色 -->
     <color name="colorPrimary">#037b4a</color>
@@ -51,14 +51,19 @@
     <color name="colorAccent">#ff8228</color>
     
     <!-- button色 -->
-    <color name="colorButton">#099a5a</color>
+    <color name="colorButton">#0aa05a</color>
     
     <color name="rippelColor">#0099CC</color>
 	
     <color name="actionbar_selected">#F0F0F0</color>
-    <color name="background_tab_pressed">#30037b4a</color>
+    <color name="background_tab_pressed">#70dddddd</color>
     
     <color name="card_background">#ffffff</color>
     <color name="card_shadow">#10000000</color>
     <color name="window_background">#00000000</color>
+	
+		<!--设置颜色-->
+	<color name="gray_de">#666666</color>
+    <color name="list_item_press">#50dddddd</color>
+
 </resources>

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jeese.helpme.R;
-import jeese.helpme.activity.PhoneActivity;
-import jeese.helpme.people.FriendActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -155,15 +153,11 @@ public class Help_Fragment extends Fragment implements OnClickListener {
 			break;
 
 		case R.id.help_fragment_helpbutton_4:
-			Intent Intent11 = new Intent(getActivity(),
-					PhoneActivity.class);
-			startActivity(Intent11);
+
 			break;
 
 		case R.id.help_fragment_helpbutton_5:
-			Intent Intent22 = new Intent(getActivity(),
-					FriendActivity.class);
-			startActivity(Intent22);
+
 			break;
 
 		case R.id.help_fragment_helpbutton_6:

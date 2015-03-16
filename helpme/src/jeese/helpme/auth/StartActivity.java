@@ -31,9 +31,9 @@ public class StartActivity extends ActionBarActivity {
 
 			@Override
 			public void onClick(View v) {
-				// 页面跳转到注册手机号页面
+				// 页面跳转到登录页面
 				Intent intent = new Intent(StartActivity.this,
-						loginActivity.class);
+						LoginActivity.class);
 				StartActivity.this.startActivity(intent);
 			}
 		});

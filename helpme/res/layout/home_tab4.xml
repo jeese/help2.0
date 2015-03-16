@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg"
+    android:orientation="vertical" >
+
+    <jeese.helpme.view.SwipeRefreshLayout
+        android:id="@+id/home_tab4_swipe_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <ListView
+            android:id="@+id/home_tab4_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="#00000000"
+            android:clipToPadding="false"
+            android:divider="@null"
+            android:dividerHeight="8dp"
+            android:fadingEdge="none"
+            android:overScrollMode="never"
+            android:padding="8dp"
+            android:scrollbarStyle="outsideOverlay" />
+    </jeese.helpme.view.SwipeRefreshLayout>
+
+</LinearLayout>

@@ -25,10 +25,13 @@ import android.util.Log;
 public class App extends Application {
 
 	private String sessionId = null;
-
 	private PreferencesCookieStore preferencesCookieStore;
-
 	private Handler handler = new Handler();
+	
+	private int ONLINE = 1;
+	private int OFFLINE = 2;
+	private int NETWORK_ERROR = 3;
+	public int STATE = 0;
 
 	public String getSessionId() {
 		return sessionId;
@@ -122,6 +125,7 @@ public class App extends Application {
 					@Override
 					public void onFailure(HttpException arg0, String arg1) {
 						System.out.println("连接服务器失败");
+						STATE = NETWORK_ERROR;
 					}
 
 					@Override
@@ -143,6 +147,7 @@ public class App extends Application {
 								editor.commit();
 
 								System.out.println("登录成功 session：" + sessionId);
+								STATE = ONLINE;
 
 								handler.postDelayed(new Runnable() {
 
@@ -154,6 +159,7 @@ public class App extends Application {
 								}, 3000000);
 							}else{
 								System.out.println("登陆失败");
+								STATE = OFFLINE;
 							}
 
 						} catch (JSONException e) {
